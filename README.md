@@ -23,21 +23,21 @@ Open the [micro:bit MakeCode editor](https://makecode.microbit.org/#editor), sel
 
 ## Blocks
 
-Drag `initialize AHT20` or `initialize BMP280` from its sensor category into `on start`. If you use both sensors, stack both blocks there. You can also skip this step and let the first `read sensor` initialize the sensor automatically.
+Each temperature or humidity block reads its sensor when it runs. The first use initializes the sensor automatically. You can also drag `initialize AHT20` or `initialize BMP280` into `on start`.
 
-`read sensor` returns true on success and updates the values. Read the temperature or humidity block only after a successful read. Values initially equal zero and retain their last successful reading on failure. Wait at least two seconds between AHT20 readings.
+Temperature is in degrees Celsius and relative humidity is in percent. All three blocks return numbers rounded to the nearest hundredth. MakeCode can omit trailing zeros when displaying a number. If a read fails, the block returns the last successful value for that measurement, or zero before the first successful read.
 
 The BMP280 reads its individual temperature calibration values and uses the floating-point compensation formula. MakeCode's I²C interface does not expose a reliable device-presence scan or all bus errors, so the return values cannot guarantee detection of every wiring fault. I²C does not work in the simulator.
 
 ## Example
 
-**1. Initialize both sensors.** In **Blocks**, drag one initialization block from each sensor category into **on start**.
+**1. Optionally initialize both sensors at startup.** In **Blocks**, drag one initialization block from each sensor category into **on start**.
 
 ![MakeCode on start stack with initialize AHT20 followed by initialize BMP280](docs/images/initialize.png)
 
-**2. Read the sensors in a loop.** Inside **forever**, add one **if / else** from **Logic** for each sensor. Use **read AHT20 sensor** and **read BMP280 sensor** as the conditions. Under **Advanced → Serial**, use **serial write value** for the readings and **serial write line** for a failed read. End the loop with a 2000 ms pause from **Basic**.
+**2. Read the sensors in a loop.** Inside **forever**, add three **serial write value** blocks from **Advanced → Serial**. Plug the AHT20 temperature, AHT20 humidity, and BMP280 temperature blocks directly into their value slots. End the loop with a 2000 ms pause from **Basic**.
 
-![MakeCode forever loop that logs AHT20 temperature and humidity and BMP280 temperature on successful reads, reports each failed read, then pauses for two seconds](docs/images/read-sensors.png)
+![MakeCode forever loop that writes AHT20 temperature, AHT20 humidity, and BMP280 temperature to serial, then pauses for two seconds](docs/images/read-sensors.png)
 
 **3. View the readings.** Download the program to the wired micro:bit, connect it by USB, and open **Show console Device** in MakeCode to see the readings.
 

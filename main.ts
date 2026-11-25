@@ -3,6 +3,7 @@
 namespace AHT20 {
     const address = 0x38
     let initialized = false
+    let measuring = false
     let temperatureValue = 0
     let humidityValue = 0
 
@@ -37,8 +38,17 @@ namespace AHT20 {
     }
 
     /** Take a measurement and update both values. Returns false on failure. */
-    //% block="read AHT20 sensor" weight=90
+    //% block="read AHT20 sensor" blockHidden=true
     export function readSensor(): boolean {
+        // A second MakeCode fiber must wait for the current conversion to finish.
+        while (measuring) basic.pause(10)
+        measuring = true
+        let success = takeMeasurement()
+        measuring = false
+        return success
+    }
+
+    function takeMeasurement(): boolean {
         if (!initialized && !initialize()) return false
         command(0xAC, 0x33, 0x00)
         basic.pause(80)
@@ -47,8 +57,8 @@ namespace AHT20 {
             if (data.length == 6 && (data[0] & 0x80) == 0) {
                 let rawHumidity = (data[1] << 12) | (data[2] << 4) | (data[3] >> 4)
                 let rawTemperature = ((data[3] & 0x0F) << 16) | (data[4] << 8) | data[5]
-                humidityValue = rawHumidity * 100 / 1048576
-                temperatureValue = rawTemperature * 200 / 1048576 - 50
+                humidityValue = Math.round(rawHumidity * 10000 / 1048576) / 100
+                temperatureValue = Math.round((rawTemperature * 200 / 1048576 - 50) * 100) / 100
                 return true
             }
             basic.pause(20)
@@ -57,15 +67,17 @@ namespace AHT20 {
         return false
     }
 
-    /** Temperature from the last successful measurement, in degrees Celsius. */
+    /** Read the temperature in degrees Celsius, rounded to two decimal places. */
     //% block="AHT20 temperature (°C)" weight=80
     export function temperature(): number {
+        readSensor()
         return temperatureValue
     }
 
-    /** Relative humidity from the last successful measurement, in percent. */
-    //% block="AHT20 humidity (%%)" weight=70
+    /** Read the relative humidity in percent, rounded to two decimal places. */
+    //% block="AHT20 humidity (percent)" weight=70
     export function humidity(): number {
+        readSensor()
         return humidityValue
     }
 }

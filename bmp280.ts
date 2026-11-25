@@ -53,7 +53,7 @@ namespace BMP280 {
     }
 
     /** Read and compensate the temperature. Returns false when the sensor cannot be read. */
-    //% block="read BMP280 sensor" weight=90
+    //% block="read BMP280 sensor" blockHidden=true
     export function readSensor(): boolean {
         if (address == 0 && !initialize()) return false
         let data = readRegisters(address, 0xFA, 3)
@@ -67,13 +67,14 @@ namespace BMP280 {
         let var1 = (adc / 16384 - t1 / 1024) * t2
         let delta = adc / 131072 - t1 / 8192
         let var2 = delta * delta * t3
-        temperatureValue = (var1 + var2) / 5120
+        temperatureValue = Math.round((var1 + var2) * 100 / 5120) / 100
         return true
     }
 
-    /** Temperature from the last successful measurement in degrees Celsius. */
+    /** Read the temperature in degrees Celsius, rounded to two decimal places. */
     //% block="BMP280 temperature (°C)" weight=80
     export function temperature(): number {
+        readSensor()
         return temperatureValue
     }
 }
