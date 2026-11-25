@@ -1,0 +1,17 @@
+{
+  "name": "aht20-bmp280",
+  "version": "0.0.1",
+  "description": "AHT20 and BMP280 sensor blocks for micro:bit",
+  "dependencies": {
+    "core": "*"
+  },
+  "files": [
+    "main.ts",
+    "bmp280.ts",
+    "README.md"
+  ],
+  "testFiles": [
+    "test.ts"
+  ],
+  "public": true
+}
