@@ -15,7 +15,7 @@ namespace AHT20 {
     }
 
     /** Initialize the sensor. Returns false if calibration is not confirmed. */
-    //% block="initialize AHT20" weight=100
+    //% block="initialize AHT20" blockHidden=true
     export function initialize(): boolean {
         basic.pause(200)
         let status = pins.i2cReadBuffer(address, 1)
@@ -28,6 +28,12 @@ namespace AHT20 {
         // 0xFF is a common result when no device responds; it is not a valid status.
         initialized = status.length > 0 && status[0] != 0xFF && (status[0] & 0x08) != 0
         return initialized
+    }
+
+    /** Initialize the AHT20 temperature and humidity sensor. */
+    //% block="initialize AHT20" weight=100 blockAliasFor="AHT20.initialize"
+    export function _initializeStatement(): void {
+        initialize()
     }
 
     /** Take a measurement and update both values. Returns false on failure. */

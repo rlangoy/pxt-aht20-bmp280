@@ -1,3 +1,6 @@
+AHT20.initialize()
+BMP280.initialize()
+
 basic.forever(function () {
     if (AHT20.readSensor()) {
         serial.writeValue("AHT20 C", AHT20.temperature())

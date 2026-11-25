@@ -19,7 +19,7 @@ namespace BMP280 {
     }
 
     /** Find the BMP280 and read its temperature calibration data. */
-    //% block="initialize BMP280" weight=100
+    //% block="initialize BMP280" blockHidden=true
     export function initialize(): boolean {
         address = 0
         for (let candidate = 0x76; candidate <= 0x77; candidate++) {
@@ -44,6 +44,12 @@ namespace BMP280 {
         pins.i2cWriteBuffer(address, config)
         basic.pause(100)
         return true
+    }
+
+    /** Find the BMP280 and load its temperature calibration data. */
+    //% block="initialize BMP280" weight=100 blockAliasFor="BMP280.initialize"
+    export function _initializeStatement(): void {
+        initialize()
     }
 
     /** Read and compensate the temperature. Returns false when the sensor cannot be read. */
