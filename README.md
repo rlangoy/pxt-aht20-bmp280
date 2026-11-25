@@ -41,6 +41,10 @@ The BMP280 reads its individual temperature calibration values and uses the floa
 
 **3. View the readings.** Download the program to the wired micro:bit, connect it by USB, and open **Show console Device** in MakeCode to see the readings.
 
+## Diagnosing zero readings
+
+If a reading stays at zero, download the [sensor diagnostic HEX](https://raw.githubusercontent.com/rlangoy/pxt-aht20-bmp280/main/docs/diagnostics/microbit-sensor-diagnostic-299acfd.hex) and copy it to the `MICROBIT` drive. This replaces the program on the board. Open the device serial console to see the AHT20 status, the chip IDs at both BMP280 addresses, and the three labeled readings. `AHT init` and `BMP init` each print `1` when initialization succeeds or `0` when it fails.
+
 ## Gallery submission
 
 For gallery approval see https://makecode.microbit.org/extensions/approval. Add an MIT LICENSE and complete the other approval requirements if you wish to submit the extension. Check the rights to any third-party code before licensing it.
